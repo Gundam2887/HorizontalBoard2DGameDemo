@@ -50,13 +50,15 @@ public class Player : MonoBehaviour
     public int heavyPause;
     //震动
     private Cinemachine.CinemachineCollisionImpulseSource myInpulse;
+    //音效
+    public AudioSource runAudio,jumpAudio,atkAudio,toGroundAudio,hitAudio;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         coll = GetComponent<Collider2D>();
-        myInpulse = GetComponent<Cinemachine.CinemachineCollisionImpulseSource>();             
+        myInpulse = GetComponent<Cinemachine.CinemachineCollisionImpulseSource>();
     }
 
     void Update()
@@ -64,35 +66,34 @@ public class Player : MonoBehaviour
         //跳跃
         if (Input.GetKeyDown(KeyCode.Space) && jumpCount > 0 && !isAttack)
         {
-            GameObject.Find("Player").GetComponent<PlayerLife>().ChangeLife(60);
+            jumpAudio.Play();
             anim.SetBool("ToGround", false);
             jumpPressed = true;
             //Rigidbody.velocity 刚体的速度矢量
             rb.velocity = new Vector2(rb.velocity.x, jumpforce);
             anim.SetBool("Jumping", true);
         }
-
         Attack();
-
     }
 
     void FixedUpdate()
     {
         //检测Player的碰撞体是否碰撞到地面
         isGround = Physics2D.OverlapCircle(groundCheck.position, 0.1f, ground);
-        GroundMove();
         SwitchAnim();
         Jump();
+        GroundMove();      
     }
 
     //移动
-    void GroundMove()
+    public void GroundMove()
     {
+
         //移动 Horizontal在X轴上移动 Vertical在Y轴上移动
         float horizontalMove = Input.GetAxis("Horizontal");
         //转向 Horizontal在X轴上移动 Vertical在Y轴上移动
         float faceDircetion = Input.GetAxisRaw("Horizontal");
-
+        
         //移动
         if (horizontalMove != 0)
         {
@@ -101,6 +102,14 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector2(horizontalMove * speed * Time.deltaTime, rb.velocity.y);
             //将浮点值发送到动画器以影响过渡。  返回绝对值。
             anim.SetFloat("Running", Mathf.Abs(faceDircetion));
+        }
+        if(horizontalMove != 0 && !runAudio.isPlaying && isGround)
+        {
+            runAudio.Play();
+        }
+        if (horizontalMove == 0 || !isGround)
+        {
+            runAudio.Stop();
         }
 
         //转向
@@ -116,10 +125,11 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if(attackType == "Light")
+            if (attackType == "Light")
             {
                 rb.velocity = new Vector2(transform.localScale.x * lightSpeed, rb.velocity.y);
-            }else if(attackType =="Heavy")
+            }
+            else if (attackType == "Heavy")
             {
                 rb.velocity = new Vector2(transform.localScale.x * heavySpeed, rb.velocity.y);
             }
@@ -156,6 +166,7 @@ public class Player : MonoBehaviour
         //轻攻击
         if (Input.GetKeyDown(KeyCode.J) && !isAttack)
         {
+            atkAudio.Play();
             isAttack = true;
             attackType = "Light";
             LAComboStep++;
@@ -167,6 +178,7 @@ public class Player : MonoBehaviour
         //重攻击
         if (Input.GetKeyDown(KeyCode.K) && !isAttack)
         {
+            atkAudio.Play();
             isAttack = true;
             attackType = "Heavy";
             HAComboStep++;
@@ -205,21 +217,24 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            if(attackType == "Light")
+            if (attackType == "Light")
             {
                 myInpulse.GenerateImpulse();
-                AttackSense.Instance.HitPause(lightPause);            
+                AttackSense.Instance.HitPause(lightPause);
+                hitAudio.Play();
             }
-            else if(attackType == "Heavy")
+            else if (attackType == "Heavy")
             {
                 myInpulse.GenerateImpulse();
                 AttackSense.Instance.HitPause(heavyPause);
+                hitAudio.Play();
             }
             //敌人受伤
             if (transform.localScale.x > 0)
             {
                 other.GetComponent<Enemy>().GetHit(Vector2.right);
-            }else if(transform.localScale.x < 0)
+            }
+            else if (transform.localScale.x < 0)
             {
                 other.GetComponent<Enemy>().GetHit(Vector2.left);
             }
@@ -244,6 +259,7 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("Jumping", false);
             anim.SetBool("ToGround", true);
+            toGroundAudio.Play();
         }
     }
 }

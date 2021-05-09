@@ -28,22 +28,22 @@ public class ExitUI : MonoBehaviour
         {          
             if (GameIsPaused)
             {
-                Resume(); 
+                Resume();
+                Time.timeScale = 1f;
             }
             else
             {
                 Pause();
+                Time.timeScale = 0f;
             }
         }
         if (LifeBar.lifeCurrent <= 0)
         {
-                dieUI.SetActive(true);
-                Time.timeScale = 0f;
+            dieUI.SetActive(true);
         }
         else
         {
             dieUI.SetActive(false);
-            Time.timeScale = 1f;
         }
         lockState();
     }
