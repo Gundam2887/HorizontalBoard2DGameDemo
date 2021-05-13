@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Assets\Script\AttackSense.cs" />
     <Compile Include="Assets\Script\Enemy.cs" />
+    <Compile Include="Assets\Script\EnmeyAttack.cs" />
     <Compile Include="Assets\Script\ExitUI.cs" />
     <Compile Include="Assets\Script\FSM.cs" />
     <Compile Include="Assets\Script\GameStart.cs" />

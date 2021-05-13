@@ -187,6 +187,7 @@ public class AttackState : IState
     }
     public void OnEnter()
     {
+        parameter.getAttack = true;
         parameter.animator.Play("Attack");
     }
 
@@ -206,7 +207,7 @@ public class AttackState : IState
 
     public void OnExit()
     {
-
+        parameter.getAttack = false;
     }
 }
 
@@ -238,6 +239,12 @@ public class HitState : IState
         {
             manager.TransitionState(StateType.Death);
         }
+
+        if(info.normalizedTime >= .6f)
+        {
+            parameter.getHit = false;
+        }
+
         if (info.normalizedTime >= .95f)
         {
             parameter.target = GameObject.FindWithTag("Player").transform;

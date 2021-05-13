@@ -37,6 +37,7 @@ public class PlayerLife : MonoBehaviour
         {
             life = maxLife;
         }
+        this.GetComponent<Player>().getHit = false;
     }
     
     void Die()

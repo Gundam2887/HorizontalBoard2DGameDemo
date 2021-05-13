@@ -28,6 +28,7 @@ public class Parameter
     public AnimatorStateInfo info;
     public Rigidbody2D rb;
     public Animator hitAnimator;
+    public bool getAttack;
 }
 public class FSM : MonoBehaviour
 {
@@ -64,8 +65,8 @@ public class FSM : MonoBehaviour
             parameter.getHit = true;
         }
         //GetHit(parameter.direction);
-        Debug.Log(parameter.getHit);
-        if(parameter.health <= 0)
+        
+        if (parameter.health <= 0)
         {
             Destroy(this.gameObject, 0.9f);
         }
@@ -96,6 +97,7 @@ public class FSM : MonoBehaviour
         }
     }
 
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -108,7 +110,7 @@ public class FSM : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            parameter.target = null;
+            parameter.target = null;          
         }
     }
 
@@ -117,12 +119,15 @@ public class FSM : MonoBehaviour
         Gizmos.DrawWireSphere(parameter.attackPoint.position, parameter.attackArea);
     }
 
+
     public void GetHit(Vector2 direction)
     {
         transform.localScale = new Vector3(direction.x * 9, 9, 9);
         parameter.getHit = true;
-        //parameter.direction = direction;       
+        parameter.direction = -direction / 2;
         //parameter.animator.SetTrigger("Hit");
         parameter.hitAnimator.SetTrigger("Hit");
     }
+
+
 }

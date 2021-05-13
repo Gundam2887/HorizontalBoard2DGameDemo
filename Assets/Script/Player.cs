@@ -42,8 +42,6 @@ public class Player : MonoBehaviour
     public float heavySpeed;
     //被敌人击退的速度
     public float isHitSpeed;
-    //受击状态
-    private bool isHit;
     //轻攻击停顿帧数
     public int lightPause;
     //重攻击停顿帧数
@@ -52,6 +50,10 @@ public class Player : MonoBehaviour
     private Cinemachine.CinemachineCollisionImpulseSource myInpulse;
     //音效
     public AudioSource runAudio,jumpAudio,atkAudio,toGroundAudio,hitAudio;
+
+    public bool getHit = false;
+
+    private AnimatorStateInfo info;
 
     void Start()
     {
@@ -74,6 +76,16 @@ public class Player : MonoBehaviour
             anim.SetBool("Jumping", true);
         }
         Attack();
+        GetHit();
+
+        info = anim.GetCurrentAnimatorStateInfo(0);
+        if (getHit)
+        {
+            if (info.normalizedTime >= 0.1f)
+            {
+                getHit = false;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -215,7 +227,7 @@ public class Player : MonoBehaviour
     //攻击判定
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Parameter parameter = new Parameter();
+        //Parameter parameter = new Parameter();
         if (other.CompareTag("Enemy"))
         {
             if (attackType == "Light")
@@ -244,6 +256,19 @@ public class Player : MonoBehaviour
                 other.GetComponent<FSM>().GetHit(Vector2.left);
             }
         }
+    }
+
+     void GetHit()
+    {
+        if (getHit == true)
+        {
+            anim.SetTrigger("IsHit");
+        }
+    }
+
+    public void GetHitOver()
+    {
+        getHit = false;
     }
 
     //动画切换
