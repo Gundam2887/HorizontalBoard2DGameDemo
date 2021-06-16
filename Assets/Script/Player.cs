@@ -166,7 +166,6 @@ public class Player : MonoBehaviour
     //攻击
     void Attack()
     {
-        //轻攻击
         if (Input.GetKeyDown(KeyCode.J) && !isAttack)
         {
             atkAudio.Play();
@@ -249,6 +248,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //受击判定
     void GetHit()
     {
         info = anim.GetCurrentAnimatorStateInfo(0);
@@ -256,7 +256,7 @@ public class Player : MonoBehaviour
         {
             anim.SetTrigger("IsHit");
             Debug.Log(getHit);
-            if(info.normalizedTime >= 0.01f)
+            if (info.normalizedTime >= 0.01f)
             {
                 getHit = false;
                 Debug.Log(getHit);

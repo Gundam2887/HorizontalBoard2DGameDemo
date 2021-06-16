@@ -10,7 +10,6 @@ public class GameStart : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(audio_a);
-        lockState();
         Cursor.visible = true;
     }
     public void OnButtonGameStart()
@@ -23,16 +22,5 @@ public class GameStart : MonoBehaviour
     {
         Application.Quit();
         music.Play();
-    }
-    void lockState()
-    {
-        if (Time.timeScale == 1f)
-        {
-            Cursor.visible = false;
-        }
-        else if (Time.timeScale == 0f)
-        {
-            Cursor.visible = true;
-        }
     }
 }

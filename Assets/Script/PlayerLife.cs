@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerLife : MonoBehaviour
 {
     //血量
-    private int maxLife = 100;
-    private int life = 100;
+    public int maxLife = 100;
+    public int  life = 100;
 
     private Animator anim;
     //被击退的速度
